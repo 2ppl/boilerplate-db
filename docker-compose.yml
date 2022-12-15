@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  pg-db:
+    image: postgres
+    restart: unless-stopped
+    networks:
+      - boilerplate-net
+    volumes:
+      - ./pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: boilerplate-db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 8818:5432
+    logging:
+      # limit logs retained on host to 25MB
+      driver: json-file
+      options:
+        max-size: '500k'
+        max-file: '50'
+
+  pg-adminer:
+    image: adminer
+    restart: unless-stopped
+    networks:
+      - boilerplate-net
+    ports:
+      - 8889:8080
+
+networks:
+  boilerplate-net:
+    driver: bridge
